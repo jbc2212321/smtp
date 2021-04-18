@@ -1,6 +1,8 @@
 package com.example.smtp.Controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.smtp.mapper.ManagerMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -12,6 +14,8 @@ import java.net.Socket;
 
 @RestController
 public class PopController {
+    @Autowired
+    private ManagerMapper managerMapper;
 
     //pop
     @CrossOrigin
@@ -20,7 +24,7 @@ public class PopController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String currentUser = jsonObject.getString("currentUser");
         String password=jsonObject.getString("password");
-        int port = 110;  //默认110 ，从数据库中取
+        int port = managerMapper.getPOP();  //默认110 ，从数据库中取
 
 
         ServerSocket serSo=new ServerSocket(port);
@@ -38,4 +42,18 @@ public class PopController {
             }
     }
 
+    //查看端口
+    @CrossOrigin
+    @GetMapping("/getPOP")
+    public int getPOP() {
+        return managerMapper.getPOP();
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/updatePOP", method = RequestMethod.POST, consumes = "application/json")
+    public void updatePOP(@RequestBody String jsonParamStr) {
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        int pop = jsonObject.getInteger("pop");
+        managerMapper.updatePOP(pop);
+    }
 }

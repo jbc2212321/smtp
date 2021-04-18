@@ -1,9 +1,6 @@
 package POPANDSMTP;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -15,7 +12,7 @@ public class smtpSend extends Thread{
     }
 
     public void rectFromClient(Socket clientSocket) throws IOException, InterruptedException {
-        int port=25;
+
 
 
         int welcome_state = 0;
@@ -27,7 +24,7 @@ public class smtpSend extends Thread{
         String mail_subject = "";
         String mail_source = "";
         String mail_des = "";
-
+        String mail_from="";
         String inTemp="";
             BufferedReader systemIn = new BufferedReader(new InputStreamReader(System.in));
             BufferedReader socketIn = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -55,9 +52,10 @@ public class smtpSend extends Thread{
                 if (arr[0].equals("LOGIN") && arr.length == 3) {
                     String user_name = arr[1];
                     String pass_word = arr[2];
+                    mail_from=user_name;
                     res = "+OK";
-                    if(true){
-                   // if (mysqlJDBC.check_user(user_name, pass_word)) {
+                  //  if(true){
+                    if (POPANDSMTP.mysqlJDBC.check_user(user_name, pass_word)) {
                         login_state = 1;
                         res += "+OK user successfully logged on!";
                     } else {
@@ -104,8 +102,8 @@ public class smtpSend extends Thread{
                         }
                     }
                     res="ok!";
-                    mail sendMail=new mail();
-                    sendMail.createMail(mail_cont,mail_subject, mail_source,mail_des);
+                    POPANDSMTP.mail sendMail=new POPANDSMTP.mail();
+                    sendMail.createMail(mail_cont,mail_subject, mail_source,mail_des,mail_from);
                     sendToSever(sendMail);
                     mail_cont="";
                 }
@@ -119,7 +117,7 @@ public class smtpSend extends Thread{
             clientSocket.close();;
     }
 
-    public void sendToSever(mail sendMail) throws IOException {
+    public void sendToSever(POPANDSMTP.mail sendMail) throws IOException {
         String ip="";
         try {
             InetAddress ip4 = Inet4Address.getLocalHost();
@@ -130,9 +128,12 @@ public class smtpSend extends Thread{
         }
 
         Socket socket=new Socket(ip,8888);
-        PrintWriter socketOut = new PrintWriter(socket.getOutputStream());
-        socketOut.print(sendMail.toString());
-        socketOut.flush();
+      //  PrintWriter socketOut = new PrintWriter(socket.getOutputStream());
+        ObjectOutputStream oo=new ObjectOutputStream(socket.getOutputStream());
+        oo.writeObject(sendMail);
+        oo.flush();
+     //   socketOut.print();
+     //   socketOut.flush();
         socket.close();
     }
 

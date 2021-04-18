@@ -5,7 +5,7 @@
 <mapper namespace="com.example.smtp.mapper.UserMapper">
 
     <!--    添加用户-->
-    <insert id="insertRelationship">
+    <insert id="addUser">
         insert into user
         (username,password,usermail,smtp_state,pop_state,port,identy)values
          (#{username},#{password},#{usermail},1,1,25,0)

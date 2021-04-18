@@ -47,7 +47,7 @@ public class mysqlJDBC {
         try {
             if (conn == null)
                 return false;
-            String sql="select * from user where user=? and password=?;";
+            String sql="select 1 from user where username=? and password=?;";
 
             PreparedStatement stt = conn.prepareStatement(sql);
 
@@ -55,7 +55,8 @@ public class mysqlJDBC {
             stt.setString(2,password);
             ResultSet set=null;
             set=stt.executeQuery();
-            if(set!=null)return true;
+          //  boolean exist=;
+            if(set.next())return true;
             return false;
         }
         catch (Exception e) {
@@ -74,11 +75,7 @@ public class mysqlJDBC {
         try {
             if (conn == null)
                 return false;
-            String sql="select * from mail where mail_no =?;";
-
-
-
-
+            String sql="select * from email where email_no =?;";
 
 
 
@@ -86,10 +83,17 @@ public class mysqlJDBC {
 
           //  stt.setString(0,user);
             stt.setInt(1,mailID);
+
             ResultSet set=null;
             set=stt.executeQuery();
-            if(set!=null)return false;
-            sql="delete from mail where mail_no =?;";
+            if(!set.next())return false;
+            sql="delete from email where email_no=?;";
+            stt = conn.prepareStatement(sql);
+
+            //  stt.setString(0,user);
+            stt.setInt(1,mailID);
+            System.out.println(stt.toString());
+            stt.execute();
             return true;
         }
         catch (Exception e) {
@@ -103,18 +107,12 @@ public class mysqlJDBC {
         return true;
     }
 
-    public static ArrayList<mail> listMail(String user){
+    public static ArrayList<POPANDSMTP.mail> listMail(String user){
         Connection conn = mysqlJDBC.getConnection();
         try {
             if (conn == null)
                 return null;
             String sql="select * from email where email_to=?;";
-
-
-
-
-
-
 
             PreparedStatement stt = conn.prepareStatement(sql);
 
@@ -122,9 +120,16 @@ public class mysqlJDBC {
 
             ResultSet set=null;
             set=stt.executeQuery();
-
-            if(set!=null)return null;
-            return null;
+            ArrayList<POPANDSMTP.mail> arrL=new ArrayList<>();
+            while(set.next()){
+                POPANDSMTP.mail Mail=new POPANDSMTP.mail();
+                Mail.mail_no=set.getInt(1);
+                Mail.mail_from=set.getString(2);
+                Mail.mail_des=set.getString(3);
+                Mail.mail_subject=set.getString(4);
+                arrL.add(Mail);
+            }
+            return arrL;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -137,24 +142,24 @@ public class mysqlJDBC {
         return null;
     }
 
-    public static mail viewMail(String user){
+    public static String viewMail(int mailNo){
         Connection conn = mysqlJDBC.getConnection();
         try {
             if (conn == null)
                 return null;
             String sql="select * from email where email_no=?;";
 
-
-
             PreparedStatement stt = conn.prepareStatement(sql);
 
-            stt.setString(1,user);
+            stt.setInt(1,mailNo);
 
             ResultSet set=null;
             set=stt.executeQuery();
-
-            if(set!=null)return null;
-            return null;
+            while (set.next()){
+                String cont=set.getString(6);
+                return cont;
+            }
+            return "no this letter!!";
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -5,7 +5,6 @@ import com.example.smtp.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,8 +20,22 @@ public class UserController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String userName = jsonObject.getString("username");
         String password = jsonObject.getString("password");
-        String identity = jsonObject.getString("identity");
-        return true;
+        int check = userMapper.checkUser(userName, password);
+        return check == 1;
+
+    }
+
+    //管理员登录
+    @CrossOrigin
+    @RequestMapping(value = "/checkAdmin", method = RequestMethod.POST, consumes = "application/json")
+    public Boolean checkAdmin(@RequestBody String jsonParamStr) {
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        String userName = jsonObject.getString("username");
+        String password = jsonObject.getString("password");
+        int check = userMapper.checkAdmin(userName, password);
+        System.out.println(check);
+        return check == 1;
+
     }
 
     //添加用户
@@ -33,8 +46,8 @@ public class UserController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String userName = jsonObject.getString("username");
         String passWord = jsonObject.getString("password");
-        String email = userName+"@qq.com";
-        userMapper.addUser(userName,passWord,email);
+        String email = userName + "@qq.com";
+        userMapper.addUser(userName, passWord, email);
         return true;
     }
 
@@ -45,5 +58,14 @@ public class UserController {
         return userMapper.getUserList();
     }
 
+    //删除用户
+    @CrossOrigin
+    @RequestMapping(value = "/deleteUser", method = RequestMethod.POST, consumes = "application/json")
+    public Boolean deleteUser(@RequestBody String jsonParamStr){
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        String userName = jsonObject.getString("username");
+        userMapper.deleteUser(userName);
+        return true;
+    }
 }
 
