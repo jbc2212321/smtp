@@ -46,7 +46,7 @@ public class UserController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String userName = jsonObject.getString("username");
         String passWord = jsonObject.getString("password");
-        String email = userName + "@qq.com";
+        String email = userName + "@dyz.com";
         userMapper.addUser(userName, passWord, email);
         return true;
     }
