@@ -12,6 +12,11 @@ public class mysqlJDBC {
     private static String URL = "jdbc:mysql://localhost:3306/" +
             "smtp?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8";
 
+    private static String getTime() {
+        java.util.Date a = new java.util.Date();
+        java.sql.Timestamp d = new java.sql.Timestamp(a.getTime());
+        return d.toString();
+    }
     // 数据库的用户名
     private static String UserName = "root";
     // 数据库的密码
@@ -175,19 +180,20 @@ public class mysqlJDBC {
     }
 
 
-    public static void AddLog(int id,String type,String time,String actionType){
+    public static void AddLog(String userName,String actionType){
         Connection conn = mysqlJDBC.getConnection();
+        String time=getTime();
         try {
             if (conn == null)
                 return;
-            String sql="insert into log(userNo,type,action,time)  VALUES(?,?,?,?);";
+            String sql="insert into log(username,operate,time)  VALUES(?,?,?);";
             PreparedStatement stt = conn.prepareStatement(sql);
             //执行sql语句
             //    System.out.println(time);
-            stt.setInt(1,id);
-            stt.setString(2,type);
-            stt.setString(3,actionType);
-            stt.setTimestamp(4, Timestamp.valueOf(time));
+           // stt.setInt(1,id);
+            stt.setString(1,userName);
+            stt.setString(2,actionType);
+            stt.setTimestamp(3, Timestamp.valueOf(time));
 
             stt.executeUpdate();
         }

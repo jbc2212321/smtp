@@ -22,6 +22,11 @@ public class UserController {
         String password = jsonObject.getString("password");
         int check = userMapper.checkUser(userName, password);
         if (check==1){
+
+
+
+
+            POPANDSMTP.mysqlJDBC.AddLog(userName,"login");
             return "登录成功";
         }
         return "登录失败";
@@ -37,6 +42,11 @@ public class UserController {
         String password = jsonObject.getString("password");
         int check = userMapper.checkAdmin(userName, password);
         System.out.println(check);
+
+
+
+        POPANDSMTP.mysqlJDBC.AddLog(userName,"login");
+
         return check == 1;
 
     }
@@ -51,6 +61,9 @@ public class UserController {
         String passWord = jsonObject.getString("password");
         String email = userName + "@dyz.com";
         userMapper.addUser(userName, passWord, email);
+
+
+        POPANDSMTP.mysqlJDBC.AddLog(userName,"register");
         return "注册成功";
     }
 
@@ -68,6 +81,9 @@ public class UserController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String userName = jsonObject.getString("username");
         userMapper.deleteUser(userName);
+
+
+
         return true;
     }
 

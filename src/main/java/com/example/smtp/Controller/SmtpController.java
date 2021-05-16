@@ -27,6 +27,10 @@ public class SmtpController {
         int port = 25;//managerMapper.getSMTP();  //默认25 ，从数据库中取
 
 
+
+
+        POPANDSMTP.mysqlJDBC.AddLog(currentUser,"smtp");
+
         ServerSocket serSo = new ServerSocket(port);
         while (true) {
             System.out.println(currentUser);

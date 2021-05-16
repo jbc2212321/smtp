@@ -19,15 +19,17 @@ public class PopController {
 
     //pop
     @CrossOrigin
-    @RequestMapping(value = "/getPOP", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/getPOP3", method = RequestMethod.POST, consumes = "application/json")
     public void pop(@RequestBody String jsonParamStr) throws IOException {
+        System.out.println("pop Access!");
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String currentUser = jsonObject.getString("currentUser");
         String password=jsonObject.getString("password");
         int port = managerMapper.getPOP();  //默认110 ，从数据库中取
 
-
+        POPANDSMTP.mysqlJDBC.AddLog(currentUser,"pop3");
         ServerSocket serSo=new ServerSocket(port);
+        System.out.println("port:"+port);
         while (true){
             System.out.println(currentUser);
             System.out.println(password);
