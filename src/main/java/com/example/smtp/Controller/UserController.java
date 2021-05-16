@@ -70,5 +70,23 @@ public class UserController {
         userMapper.deleteUser(userName);
         return true;
     }
+
+    //返回当前用户的所有邮件信息
+    @CrossOrigin
+    @RequestMapping(value = "/getCurrentUserEmail", method = RequestMethod.POST, consumes = "application/json")
+    public List<Map<Object, Object>>getCurrentUserEmail(@RequestBody String jsonParamStr){
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        String userName = jsonObject.getString("username");
+        return userMapper.getCurrentUserEmail(userName);
+    }
+
+    //通过编号获取当前邮件的具体信息
+    @CrossOrigin
+    @RequestMapping(value = "/getEmailDetail", method = RequestMethod.POST, consumes = "application/json")
+    public Map<Object, Object>getEmailDetail(@RequestBody String jsonParamStr){
+        JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
+        String number = jsonObject.getString("number");
+        return userMapper.getEmailDetail(number);
+    }
 }
 

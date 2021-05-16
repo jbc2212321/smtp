@@ -117,6 +117,8 @@ public class mysqlJDBC {
             PreparedStatement stt = conn.prepareStatement(sql);
 
             stt.setString(1,user);
+            System.out.println(stt.toString());
+
 
             ResultSet set=null;
             set=stt.executeQuery();
@@ -124,9 +126,9 @@ public class mysqlJDBC {
             while(set.next()){
                 POPANDSMTP.mail Mail=new POPANDSMTP.mail();
                 Mail.mail_no=set.getInt(1);
-                Mail.mail_from=set.getString(2);
-                Mail.mail_des=set.getString(3);
-                Mail.mail_subject=set.getString(4);
+                Mail.mail_from=set.getString(3);
+                Mail.mail_des=set.getString(4);
+                Mail.mail_subject=set.getString(5);
                 arrL.add(Mail);
             }
             return arrL;

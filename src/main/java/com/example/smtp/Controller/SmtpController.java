@@ -24,7 +24,7 @@ public class SmtpController {
         JSONObject jsonObject = JSONObject.parseObject(jsonParamStr);
         String currentUser = jsonObject.getString("currentUser");
         String password = jsonObject.getString("password");
-        int port = managerMapper.getSMTP();  //默认25 ，从数据库中取
+        int port = 25;//managerMapper.getSMTP();  //默认25 ，从数据库中取
 
 
         ServerSocket serSo = new ServerSocket(port);

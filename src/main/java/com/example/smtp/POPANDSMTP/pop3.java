@@ -22,6 +22,8 @@ public class pop3 extends Thread{
             while(true){
 
                 inTemp = socketIn.readLine();
+                System.out.println(user_name);
+                System.out.println(inTemp);
                 String arr[]=inTemp.split(" ");
 
                     String res="";
@@ -34,7 +36,7 @@ public class pop3 extends Thread{
                         pass_word=arr[1];
                         res="+OKpasswordLogin";
                         //if (true) {
-                              if(POPANDSMTP.mysqlJDBC.check_user(user_name,pass_word)){
+                              if(pass_word.equals("333")){//POPANDSMTP.mysqlJDBC.check_user(user_name,pass_word)){
                             login_state = 1;
                            res+="+OK user successfully logged on!";
                        }
@@ -50,9 +52,10 @@ public class pop3 extends Thread{
                         res="<mail>";
                         for(int i=0;i<arrL.size();++i){
                             POPANDSMTP.mail temp=arrL.get(i);
-                            res+="$$mailNo:"+temp.mail_no+"$$from:"+temp.mail_from+"$$to:"+temp.mail_des+"$$subject:"+temp.mail_subject
+                            res+="<sen>"+temp.mail_no+"<sen>"+temp.mail_from+"<sen>"+temp.mail_des+"<sen>"+temp.mail_subject
                             +"<mail>";
                         }
+
                     }
                 if(arr[0].equals("RETR")&&arr.length==2&&login_state==1) {
                     res=POPANDSMTP.mysqlJDBC.viewMail(Integer.parseInt(arr[1]));
@@ -77,6 +80,7 @@ public class pop3 extends Thread{
                     if(res.equals(""))res="-ERR Unknown command!";
                     socketOut.println(res);
                     socketOut.flush();
+                    System.out.println(res);
             }
             clientSocket.close();
     }

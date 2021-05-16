@@ -32,4 +32,12 @@ public interface UserMapper {
     //删除用户
     @Delete("delete from user where username=#{username}")
     void deleteUser(@Param("username") String username);
+
+    //返回当前用户的所有邮件信息
+    @Select("select * from email where email_to=#{username}")
+    List<Map<Object, Object>> getCurrentUserEmail(@Param("username")String userName);
+
+    //通过编号获取当前邮件的具体信息
+    @Select("select * from email where email_no=#{number}")
+    Map<Object, Object> getEmailDetail(@Param("number")String number);
 }
